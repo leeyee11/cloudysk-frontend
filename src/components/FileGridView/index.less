@@ -1,0 +1,43 @@
+.fileCard {
+  width: 240px;
+  height: 72px;
+  margin: 12px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+
+  .fileIcon {
+    font-size: xx-large;
+    text-align: center;
+  }
+
+  div.fileLabel {
+    margin: 0 0.5rem;
+    overflow: hidden;
+
+    div.fileName {
+      font-size: medium;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      -webkit-line-clamp: 1;
+    }
+
+    div.fileInfo {
+      color: grey;
+      font-size: xx-small;
+      max-height: 0;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+    }
+  }
+}
+
+.fileCard:hover {
+  div.fileLabel {
+    div.fileInfo {
+      max-height: 12px;
+    }
+  }
+}
