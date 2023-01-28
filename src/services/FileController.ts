@@ -142,6 +142,7 @@ export async function move(
   params: {
     source: PathLike;
     target: PathLike;
+    rename: boolean | undefined;
   },
   options?: { [key: string]: any },
 ) {

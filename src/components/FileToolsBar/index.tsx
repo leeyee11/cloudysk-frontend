@@ -52,12 +52,12 @@ const FileToolsBar = () => {
         <Button
           icon={<FolderAddOutlined />}
           title="Create new folder"
-          onClick={() => openCreator(CreateTypes.Folder, path)}
+          onClick={() => openCreator(CreateTypes.NewFolder, path)}
         ></Button>
         <Button
           icon={<FileAddOutlined />}
           title="Create new file"
-          onClick={() => openCreator(CreateTypes.File, path)}
+          onClick={() => openCreator(CreateTypes.NewFile, path)}
         ></Button>
         <Button
           icon={draggerOpen ? <PaperClipOutlined /> : <UploadOutlined />}

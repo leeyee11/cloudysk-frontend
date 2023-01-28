@@ -31,6 +31,7 @@ const useFileList = () => {
     fileList,
     path,
     loading,
+    setLoading,
     refresh: () => setLastUpdate(Date.now()),
     cd: (param: string) => {
       setPath((path) => (p.isAbsolute(param) ? param : p.resolve(path, param)));

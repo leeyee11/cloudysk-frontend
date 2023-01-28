@@ -14,6 +14,7 @@ export enum ContextMenuItems {
   NewFile = 'New File',
   NewFolder = 'New Folder',
   Paste = 'Paste',
+  Rename = 'Rename',
 }
 
 interface ContextMenuProps {
@@ -24,7 +25,7 @@ interface ContextMenuProps {
 }
 
 const ContextMenu = ({ children, path, name, items }: ContextMenuProps) => {
-  const { refresh } = useModel('global');
+  const { refresh, setLoading } = useModel('global');
   const { openCreator } = useModel('creator');
   const { copy, cut, exist, paste } = useModel('clipboard');
 
@@ -41,17 +42,25 @@ const ContextMenu = ({ children, path, name, items }: ContextMenuProps) => {
       const target = name ? p.resolve(path, name) : path;
       Modal.confirm({
         title: 'Are you sure to delete it?',
-        onOk: () => deletePath({ path: target }).then(refresh),
+        onOk: () => {
+          setLoading(true);
+          deletePath({ path: target }).then(refresh);
+        },
         onCancel: () => void 0,
         okType: 'danger',
       });
     } else if (label === ContextMenuItems.NewFile) {
-      openCreator(CreateTypes.File, path);
+      openCreator(CreateTypes.NewFile, path);
     } else if (label === ContextMenuItems.NewFolder) {
-      openCreator(CreateTypes.Folder, path);
+      openCreator(CreateTypes.NewFolder, path);
     } else if (label === ContextMenuItems.Paste) {
       if (name === null) {
-        paste(path).then(refresh);
+        setLoading(true);
+        paste(path).finally(refresh);
+      }
+    } else if (label === ContextMenuItems.Rename) {
+      if (!!name) {
+        openCreator(CreateTypes.Rename, p.resolve(path, name));
       }
     } else {
       console.error(`Unexpected action: ${label} target: ${name}`);

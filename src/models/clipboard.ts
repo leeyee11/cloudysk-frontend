@@ -28,9 +28,10 @@ const useClipboard = () => {
           return copy({ source, target });
         } else if (state.action === ClipBoardActions.Cut) {
           setState(null);
-          return move({ source, target });
+          return move({ source, target, rename: false });
         }
       }
+      return Promise.resolve();
     },
     exist: () => state !== null,
   };

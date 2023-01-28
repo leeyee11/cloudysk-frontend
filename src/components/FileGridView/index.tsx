@@ -37,6 +37,7 @@ const FileGridView = ({ path }: FildGridViewProps) => {
           ContextMenuItems.Copy,
           ContextMenuItems.Cut,
           ContextMenuItems.Delete,
+          ContextMenuItems.Rename,
         ]}
       >
         <Card.Grid
@@ -67,6 +68,7 @@ const FileGridView = ({ path }: FildGridViewProps) => {
           ContextMenuItems.Copy,
           ContextMenuItems.Cut,
           ContextMenuItems.Delete,
+          ContextMenuItems.Rename,
         ]}
       >
         <Card.Grid
@@ -102,6 +104,7 @@ const FileGridView = ({ path }: FildGridViewProps) => {
       ]}
     >
       <Card
+        loading={loading}
         bodyStyle={{ padding: 12 }}
         onContextMenu={(e) => e.stopPropagation()}
       >
