@@ -5,7 +5,7 @@ import { PromptState } from '@/models/prompt';
 const { Paragraph } = Typography;
 
 const Prompt = ({
-  state: { title, description, promptOpen, onOk, onCancel },
+  state: { title, description, defaultValue, promptOpen, onOk, onCancel },
 }: {
   state: PromptState;
 }) => {
@@ -25,7 +25,12 @@ const Prompt = ({
           <Paragraph>{description}</Paragraph>
         </Typography>
       ) : null}
-      <Input key={timestamp} ref={inputRef} />
+      <Input
+        autoFocus={true}
+        key={timestamp}
+        ref={inputRef}
+        defaultValue={defaultValue}
+      />
     </Modal>
   );
 };

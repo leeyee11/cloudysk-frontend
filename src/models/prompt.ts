@@ -2,12 +2,14 @@ import { useState } from 'react';
 
 interface PromptOptions {
   title: string;
+  defaultValue?: string;
   description?: string;
 }
 
 export interface PromptState {
   title: string;
   description: string;
+  defaultValue?: string;
   promptOpen: boolean;
   onOk: (answer: string) => void;
   onCancel: (reason?: string) => void;
@@ -16,6 +18,7 @@ export interface PromptState {
 const initialState = {
   title: '',
   description: '',
+  defaultValue: '',
   promptOpen: false,
   onOk: () => {},
   onCancel: () => {},

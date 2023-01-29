@@ -3,6 +3,7 @@ import { useModel } from '@umijs/max';
 import LocationBar from '@/components/LocationBar';
 import FildGridView from '@/components/FileGridView';
 import FileToolsBar from '@/components/FileToolsBar';
+import FilePreview from '@/components/FilePreview';
 import styles from './index.less';
 
 const FilePage: React.FC = () => {
@@ -19,6 +20,7 @@ const FilePage: React.FC = () => {
         <FileToolsBar />
         <br />
         <FildGridView path={path} />
+        <FilePreview />
       </div>
     </PageContainer>
   );

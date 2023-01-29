@@ -5,20 +5,17 @@ import {
   LoadingOutlined,
 } from '@ant-design/icons';
 import styles from './index.less';
+import dayjs from 'dayjs';
+import path from 'path';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import { FileStats } from 'typings';
 import { useModel } from '@umijs/max';
+import { humanizeSize } from '@/utils/format';
 import ContextMenu, { ContextMenuItems } from '../ContextMenu';
 
-const humanizeSize = (size: number) => {
-  const sizeUnits = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB', 'BB'];
-  let currSize = size;
-  let i = 0;
-  while (currSize > 1024) {
-    currSize /= 1024;
-    i++;
-  }
-  return Math.round(currSize * 10) / 10 + sizeUnits[i];
-};
+const p = path;
+
+dayjs.extend(relativeTime);
 
 interface FildGridViewProps {
   path: string;
@@ -26,6 +23,7 @@ interface FildGridViewProps {
 
 const FileGridView = ({ path }: FildGridViewProps) => {
   const { fileList, cd, loading } = useModel('global');
+  const { setPreview } = useModel('preview');
 
   const renderDirectoryAvatar = (stats: FileStats) => {
     return (
@@ -51,7 +49,9 @@ const FileGridView = ({ path }: FildGridViewProps) => {
             <div className={styles.fileName} title={stats.name}>
               {stats.name}
             </div>
-            <div className={styles.fileInfo}>{stats.mtime}</div>
+            <div className={styles.fileInfo}>
+              {dayjs(stats.mtime).fromNow()}
+            </div>
           </div>
         </Card.Grid>
       </ContextMenu>
@@ -75,6 +75,9 @@ const FileGridView = ({ path }: FildGridViewProps) => {
           hoverable
           className={styles.fileCard}
           onContextMenu={(e) => e.stopPropagation()}
+          onClick={() =>
+            setPreview({ ...stats, path: p.resolve(path, stats.name) })
+          }
         >
           <FileTextOutlined
             className={styles.fileIcon}
@@ -85,7 +88,7 @@ const FileGridView = ({ path }: FildGridViewProps) => {
               {stats.name}
             </div>
             <div className={styles.fileInfo}>
-              {humanizeSize(stats.size)} - {stats.mtime}
+              {humanizeSize(stats.size)} - {dayjs(stats.mtime).fromNow()}
             </div>
           </div>
         </Card.Grid>

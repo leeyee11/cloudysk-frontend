@@ -57,9 +57,18 @@ export const useCreator = () => {
   const openCreator = async (type: CreateTypes, path: string) => {
     const currPath = path;
     try {
-      const answer = await requestAnswer({
-        title: type === CreateTypes.Rename ? `Rename` : `Create New ${type}`,
-      });
+      let answer;
+      if (type === CreateTypes.Rename) {
+        const basename = p.basename(path);
+        answer = await requestAnswer({
+          title: 'Rename',
+          defaultValue: basename,
+        });
+      } else {
+        answer = await requestAnswer({
+          title: `Create New ${type}`,
+        });
+      }
       if (type === CreateTypes.NewFile) {
         createPlainFile(currPath, answer).then(refresh);
       } else if (type === CreateTypes.NewFolder) {

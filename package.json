@@ -16,6 +16,7 @@
     "@umijs/max": "^4.0.29",
     "antd": "^4.20.7",
     "classnames": "^2.3.2",
+    "dayjs": "^1.11.7",
     "path-browserify": "^1.0.1"
   },
   "devDependencies": {

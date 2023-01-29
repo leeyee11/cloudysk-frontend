@@ -26,7 +26,7 @@ export async function putPlainFile(
   body?: string,
   options?: { [key: string]: any },
 ) {
-  return request<API.Result_FileInfo_>('/api/v1/plain', {
+  return request<API.Result_string_>('/api/v1/plain', {
     method: 'PUT',
     params: {
       ...params,
@@ -46,7 +46,7 @@ export async function putEmptyFolder(
   },
   options?: { [key: string]: any },
 ) {
-  return request<API.Result_FileInfo_>('/api/v1/folder', {
+  return request<API.Result_string_>('/api/v1/folder', {
     method: 'PUT',
     params: {
       ...params,
@@ -63,7 +63,7 @@ export async function putFiles(
   body?: Buffer,
   options?: { [key: string]: any },
 ) {
-  return request<API.Result_UserInfo_>('/api/v1/files', {
+  return request<API.Result_string_>('/api/v1/files', {
     method: 'PUT',
     params: {
       ...params,
@@ -80,11 +80,12 @@ export async function getFile(
   },
   options?: { [key: string]: any },
 ) {
-  return request<API.Result_UserInfo_>(`/api/v1/file`, {
+  return request<Blob>(`/api/v1/file`, {
     method: 'GET',
     params: {
       ...params,
     },
+    responseType: 'blob',
     ...(options || {}),
   });
 }
@@ -97,7 +98,7 @@ export async function modifyFile(
   body?: API.UserInfoVO,
   options?: { [key: string]: any },
 ) {
-  return request<API.Result_UserInfo_>(`/api/v1/file`, {
+  return request<API.Result_string_>(`/api/v1/file`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
