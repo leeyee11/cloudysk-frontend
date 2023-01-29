@@ -1,5 +1,7 @@
 /* eslint-disable */
 
+import { FileStats } from 'typings';
+
 declare namespace API {
   interface PageInfo {
     /** 
@@ -63,10 +65,12 @@ declare namespace API {
     email?: string;
   }
 
-  interface Result_FileStatsList {
+  interface Result_FolderStats {
     success?: boolean;
     errorMessage?: string;
-    data?: import('typings').FileStats[];
+    data?: FileStats & {
+      children: import('typings').FileStats[];
+    };
   }
 
   interface Result_FileInfo_ {

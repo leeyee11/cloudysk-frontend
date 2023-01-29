@@ -2,14 +2,14 @@
 import { request } from '@umijs/max';
 import type { PathLike } from 'fs-extra';
 
-/** GET /api/v1/fileList */
-export async function getFileList(
+/** GET /api/v1/folder */
+export async function getFolder(
   params: {
     path: string;
   },
   options?: { [key: string]: any },
 ) {
-  return request<API.Result_FileStatsList>('/api/v1/fileList', {
+  return request<API.Result_FolderStats>('/api/v1/folder', {
     method: 'GET',
     params: {
       ...params,

@@ -7,6 +7,8 @@ import {
   InboxOutlined,
   PaperClipOutlined,
   ReloadOutlined,
+  AppstoreOutlined,
+  UnorderedListOutlined,
 } from '@ant-design/icons';
 import { useModel } from '@umijs/max';
 import { Button, Space, Upload, Typography, message } from 'antd';
@@ -15,6 +17,7 @@ import styles from './index.less';
 import classnames from 'classnames';
 import { UploadChangeParam, UploadFile } from 'antd/lib/upload';
 import { CreateTypes } from '@/models/creator';
+import { LayoutTypes } from '@/models/layout';
 
 const { Paragraph, Title, Text } = Typography;
 const { Dragger } = Upload;
@@ -23,6 +26,7 @@ const FileToolsBar = () => {
   const [draggerOpen, setDraggerOpen] = useState<boolean>(false);
   const { path, cd, refresh } = useModel('global');
   const { openCreator, state: creatorState } = useModel('creator');
+  const { layout, switchLayout } = useModel('layout');
 
   const handleUpload = (info: UploadChangeParam<UploadFile<any>>) => {
     const { status } = info.file;
@@ -63,6 +67,17 @@ const FileToolsBar = () => {
           icon={draggerOpen ? <PaperClipOutlined /> : <UploadOutlined />}
           title="Upload files"
           onClick={() => setDraggerOpen((open) => !open)}
+        ></Button>
+        <Button
+          icon={
+            layout === LayoutTypes.Grid ? (
+              <UnorderedListOutlined />
+            ) : (
+              <AppstoreOutlined />
+            )
+          }
+          title="Switch layout"
+          onClick={switchLayout}
         ></Button>
         <Button
           icon={<ReloadOutlined />}

@@ -7,6 +7,7 @@ export default defineConfig({
   initialState: {},
   request: {},
   layout: {
+    logo: 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg',
     title: 'Cloudysk',
   },
   routes: [

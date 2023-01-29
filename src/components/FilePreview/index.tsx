@@ -1,4 +1,4 @@
-import { Button, Drawer } from 'antd';
+import { Button, Card } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
 import { useModel } from '@umijs/max';
 import { humanizeSize } from '@/utils/format';
@@ -19,8 +19,8 @@ const DescriptionItem = ({
   </div>
 );
 
-const FilePreview = () => {
-  const { preview, setPreview } = useModel('preview');
+const FilePreview = ({ className }: { className: string }) => {
+  const { preview } = useModel('preview');
 
   const FileDownloadButton = ({ path }: { path: string }) => {
     return (
@@ -31,13 +31,13 @@ const FilePreview = () => {
   };
 
   return (
-    <Drawer
-      open={!!preview}
-      onClose={() => setPreview(null)}
+    <Card
       title={<div title={preview?.name}>{preview?.name}</div>}
-      closeIcon={false}
-      className={styles.previewDrawer}
-      extra={preview?.path && <FileDownloadButton path={preview?.path} />}
+      className={className}
+      extra={
+        preview?.path &&
+        preview.isFile && <FileDownloadButton path={preview?.path} />
+      }
     >
       <DescriptionItem
         title="Size"
@@ -53,7 +53,10 @@ const FilePreview = () => {
       />
       <DescriptionItem title="Mode" content={preview?.mode} />
       <DescriptionItem title="Location" content={preview?.path} />
-    </Drawer>
+      {preview?.isDirectory && (
+        <DescriptionItem title="Children" content={preview.children?.length} />
+      )}
+    </Card>
   );
 };
 

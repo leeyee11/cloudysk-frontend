@@ -3,6 +3,7 @@ import type { FileStats } from 'typings';
 
 type FilePreviewState =
   | (FileStats & {
+      children?: FileStats[];
       path: string;
     })
   | null;

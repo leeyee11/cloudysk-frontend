@@ -1,0 +1,63 @@
+.fileCard {
+  width: 100%;
+  height: 48px;
+  cursor: pointer;
+  border: none;
+  padding: 6px;
+
+  :global(.ant-row) {
+    width: 100%;
+    height: 100%;
+    align-items: center;
+  }
+
+  div.fileLabel {
+    display: flex;
+
+    .fileIcon {
+      font-size: large;
+      text-align: center;
+      height: 25px;
+      width: 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 6px;
+    }
+
+    div.fileName {
+      font-size: medium;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      -webkit-line-clamp: 1;
+    }
+  }
+
+  div.fileSizeInfo {
+    color: grey;
+    font-size: xx-small;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  div.fileDateInfo {
+    color: grey;
+    font-size: xx-small;
+    overflow: hidden;
+    user-select: none;
+  }
+}
+
+.fileCard:hover {
+  background-color: rgb(0 0 0 / 3%);
+}
+
+.emptyPlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

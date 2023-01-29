@@ -1,13 +1,15 @@
 // 全局共享数据示例
 import { BASE_PATH, DEFAULT_FILELIST } from '@/constants';
 import { useState, useEffect } from 'react';
-import { getFileList } from '@/services/FileController';
+import { useModel } from '@umijs/max';
+import { getFolder } from '@/services/FileController';
 import path from 'path-browserify';
 import type { FileStats } from 'typings';
 
 const p = path;
 
 const useFileList = () => {
+  const { setPreview } = useModel('preview');
   const [path, setPath] = useState<string>(BASE_PATH);
   const [loading, setLoading] = useState<boolean>(false);
   const [fileList, setFileList] = useState<FileStats[]>(DEFAULT_FILELIST);
@@ -16,10 +18,12 @@ const useFileList = () => {
   useEffect(() => {
     setFileList([]);
     setLoading(true);
-    getFileList({ path: path })
+    getFolder({ path: path })
       .then((result) => {
         if (result.success && result.data) {
-          setFileList(result.data);
+          const { children } = result.data;
+          setFileList(children);
+          setPreview({ ...result.data, path });
         }
       })
       .finally(() => {

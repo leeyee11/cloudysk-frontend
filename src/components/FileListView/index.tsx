@@ -1,4 +1,4 @@
-import { Card, Empty } from 'antd';
+import { Card, Empty, Row, Col } from 'antd';
 import {
   FolderOutlined,
   FileTextOutlined,
@@ -17,12 +17,12 @@ const p = path;
 
 dayjs.extend(relativeTime);
 
-interface FildGridViewProps {
+interface FildListViewProps {
   path: string;
   className: string;
 }
 
-const FileGridView = ({ path, className }: FildGridViewProps) => {
+const FileListView = ({ path, className }: FildListViewProps) => {
   const { fileList, cd, loading } = useModel('global');
   const { setPreview } = useModel('preview');
 
@@ -40,20 +40,29 @@ const FileGridView = ({ path, className }: FildGridViewProps) => {
         ]}
       >
         <Card.Grid
-          hoverable
+          hoverable={false}
           onClick={() => cd(stats.name)}
           className={styles.fileCard}
           onContextMenu={(e) => e.stopPropagation()}
         >
-          <FolderOutlined className={styles.fileIcon} />
-          <div className={styles.fileLabel}>
-            <div className={styles.fileName} title={stats.name}>
-              {stats.name}
-            </div>
-            <div className={styles.fileInfo}>
-              {dayjs(stats.mtime).fromNow()}
-            </div>
-          </div>
+          <Row gutter={12}>
+            <Col sm={12} md={18}>
+              <div className={styles.fileLabel}>
+                <FolderOutlined className={styles.fileIcon} />
+                <div className={styles.fileName} title={stats.name}>
+                  {stats.name}
+                </div>
+              </div>
+            </Col>
+            <Col sm={6} md={3}>
+              <div className={styles.fileSizeInfo}></div>
+            </Col>
+            <Col sm={6} md={3}>
+              <div className={styles.fileDateInfo}>
+                {dayjs(stats.mtime).fromNow()}
+              </div>
+            </Col>
+          </Row>
         </Card.Grid>
       </ContextMenu>
     );
@@ -73,25 +82,36 @@ const FileGridView = ({ path, className }: FildGridViewProps) => {
         ]}
       >
         <Card.Grid
-          hoverable
+          hoverable={false}
           className={styles.fileCard}
           onContextMenu={(e) => e.stopPropagation()}
           onClick={() =>
             setPreview({ ...stats, path: p.resolve(path, stats.name) })
           }
         >
-          <FileTextOutlined
-            className={styles.fileIcon}
-            key={stats.name + 'icon'}
-          />
-          <div className={styles.fileLabel}>
-            <div className={styles.fileName} title={stats.name}>
-              {stats.name}
-            </div>
-            <div className={styles.fileInfo}>
-              {humanizeSize(stats.size)} - {dayjs(stats.mtime).fromNow()}
-            </div>
-          </div>
+          <Row gutter={12}>
+            <Col sm={12} md={18}>
+              <div className={styles.fileLabel}>
+                <FileTextOutlined
+                  className={styles.fileIcon}
+                  key={stats.name + 'icon'}
+                />
+                <div className={styles.fileName} title={stats.name}>
+                  {stats.name}
+                </div>
+              </div>
+            </Col>
+            <Col sm={6} md={3}>
+              <div className={styles.fileSizeInfo}>
+                {humanizeSize(stats.size)}
+              </div>
+            </Col>
+            <Col sm={6} md={3}>
+              <div className={styles.fileDateInfo}>
+                {dayjs(stats.mtime).fromNow()}
+              </div>
+            </Col>
+          </Row>
         </Card.Grid>
       </ContextMenu>
     );
@@ -130,4 +150,4 @@ const FileGridView = ({ path, className }: FildGridViewProps) => {
   );
 };
 
-export default FileGridView;
+export default FileListView;
