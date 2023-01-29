@@ -9,7 +9,7 @@ import type { FileStats } from 'typings';
 const p = path;
 
 const useFileList = () => {
-  const { setPreview } = useModel('preview');
+  const { setOverview } = useModel('overview');
   const [path, setPath] = useState<string>(BASE_PATH);
   const [loading, setLoading] = useState<boolean>(false);
   const [fileList, setFileList] = useState<FileStats[]>(DEFAULT_FILELIST);
@@ -23,7 +23,7 @@ const useFileList = () => {
         if (result.success && result.data) {
           const { children } = result.data;
           setFileList(children);
-          setPreview({ ...result.data, path });
+          setOverview({ ...result.data, path });
         }
       })
       .finally(() => {

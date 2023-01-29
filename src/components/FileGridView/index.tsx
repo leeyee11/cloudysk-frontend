@@ -11,6 +11,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { FileStats } from 'typings';
 import { useModel } from '@umijs/max';
 import { humanizeSize } from '@/utils/format';
+import classNames from 'classnames';
 import ContextMenu, { ContextMenuItems } from '../ContextMenu';
 
 const p = path;
@@ -24,7 +25,7 @@ interface FildGridViewProps {
 
 const FileGridView = ({ path, className }: FildGridViewProps) => {
   const { fileList, cd, loading } = useModel('global');
-  const { setPreview } = useModel('preview');
+  const { overview, setOverview } = useModel('overview');
 
   const renderDirectoryAvatar = (stats: FileStats) => {
     return (
@@ -60,6 +61,8 @@ const FileGridView = ({ path, className }: FildGridViewProps) => {
   };
 
   const renderFileAvatar = (stats: FileStats) => {
+    const filePath = p.resolve(path, stats.name);
+    const isSelected = overview.path === filePath;
     return (
       <ContextMenu
         key={stats.name}
@@ -74,11 +77,12 @@ const FileGridView = ({ path, className }: FildGridViewProps) => {
       >
         <Card.Grid
           hoverable
-          className={styles.fileCard}
+          className={classNames(
+            styles.fileCard,
+            isSelected && styles.selectedFileCard,
+          )}
           onContextMenu={(e) => e.stopPropagation()}
-          onClick={() =>
-            setPreview({ ...stats, path: p.resolve(path, stats.name) })
-          }
+          onClick={() => setOverview({ ...stats, path: filePath })}
         >
           <FileTextOutlined
             className={styles.fileIcon}

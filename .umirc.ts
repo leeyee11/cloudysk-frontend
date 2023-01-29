@@ -1,4 +1,5 @@
 import { defineConfig } from '@umijs/max';
+import MonacoWebpackPlugin from 'monaco-editor-webpack-plugin';
 
 export default defineConfig({
   antd: {},
@@ -45,5 +46,12 @@ export default defineConfig({
   moment2dayjs: {
     preset: 'antd',
     plugins: ['duration'],
+  },
+  chainWebpack: (memo, { webpack }) => {
+    memo.plugin('monaco').use(
+      new MonacoWebpackPlugin({
+        languages: ['json'],
+      }),
+    );
   },
 });

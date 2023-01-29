@@ -4,13 +4,24 @@ import LocationBar from '@/components/LocationBar';
 import FileGridView from '@/components/FileGridView';
 import FileListView from '@/components/FileListView';
 import FileToolsBar from '@/components/FileToolsBar';
-import FilePreview from '@/components/FilePreview';
+import FileOverview from '@/components/FileOverview';
 import styles from './index.less';
 import { LayoutTypes } from '@/models/layout';
+import CodeEditor from '@/components/CodeEditor';
 
-const FilePage: React.FC = () => {
+const FolderOverview = () => {
   const { path } = useModel('global');
   const { layout } = useModel('layout');
+
+  return layout === LayoutTypes.Grid ? (
+    <FileGridView className={styles.folderOverview} path={path} />
+  ) : (
+    <FileListView className={styles.folderOverview} path={path} />
+  );
+};
+
+const FilePage: React.FC = () => {
+  const { previewState, containerRef } = useModel('preview');
 
   return (
     <PageContainer
@@ -19,16 +30,12 @@ const FilePage: React.FC = () => {
         breadcrumbRender: () => <LocationBar />,
       }}
     >
-      <div className={styles.container}>
+      <div className={styles.container} ref={containerRef}>
         <FileToolsBar />
         <br />
         <div className={styles.folderView}>
-          {layout === LayoutTypes.Grid ? (
-            <FileGridView className={styles.fileOverview} path={path} />
-          ) : (
-            <FileListView className={styles.fileOverview} path={path} />
-          )}
-          <FilePreview className={styles.filePreview} />
+          {previewState?.isEditing ? <CodeEditor /> : <FolderOverview />}
+          <FileOverview className={styles.fileOverview} />
         </div>
       </div>
     </PageContainer>

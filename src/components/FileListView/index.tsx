@@ -11,6 +11,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { FileStats } from 'typings';
 import { useModel } from '@umijs/max';
 import { humanizeSize } from '@/utils/format';
+import classNames from 'classnames';
 import ContextMenu, { ContextMenuItems } from '../ContextMenu';
 
 const p = path;
@@ -24,7 +25,7 @@ interface FildListViewProps {
 
 const FileListView = ({ path, className }: FildListViewProps) => {
   const { fileList, cd, loading } = useModel('global');
-  const { setPreview } = useModel('preview');
+  const { overview, setOverview } = useModel('overview');
 
   const renderDirectoryAvatar = (stats: FileStats) => {
     return (
@@ -69,6 +70,8 @@ const FileListView = ({ path, className }: FildListViewProps) => {
   };
 
   const renderFileAvatar = (stats: FileStats) => {
+    const filePath = p.resolve(path, stats.name);
+    const isSelected = overview.path === filePath;
     return (
       <ContextMenu
         key={stats.name}
@@ -83,11 +86,12 @@ const FileListView = ({ path, className }: FildListViewProps) => {
       >
         <Card.Grid
           hoverable={false}
-          className={styles.fileCard}
+          className={classNames(
+            styles.fileCard,
+            isSelected && styles.selectedFileCard,
+          )}
           onContextMenu={(e) => e.stopPropagation()}
-          onClick={() =>
-            setPreview({ ...stats, path: p.resolve(path, stats.name) })
-          }
+          onClick={() => setOverview({ ...stats, path: filePath })}
         >
           <Row gutter={12}>
             <Col sm={12} md={18}>
