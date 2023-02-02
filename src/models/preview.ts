@@ -3,6 +3,7 @@ import { getFile, putPlainFile } from '@/services/FileController';
 
 interface PreviewState {
   data: string | Buffer;
+  path: string;
   isEditing: boolean;
   createdTimestamp: number;
 }
@@ -19,6 +20,7 @@ const usePreview = () => {
       data: text,
       isEditing: true,
       createdTimestamp: Date.now(),
+      path,
     });
   };
 

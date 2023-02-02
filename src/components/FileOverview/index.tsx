@@ -2,14 +2,20 @@ import { Button, Card, Modal, notification } from 'antd';
 import {
   DownloadOutlined,
   EditOutlined,
+  PlayCircleOutlined,
+  PauseCircleOutlined,
   SaveOutlined,
   CloseOutlined,
 } from '@ant-design/icons';
 import { useModel } from '@umijs/max';
 import { humanizeSize } from '@/utils/format';
 import { download } from '@/utils/download';
+import { lookup } from 'mime-types';
+import path from 'path-browserify';
 import dayjs from 'dayjs';
 import styles from './index.less';
+
+const p = path;
 
 const DescriptionItem = ({
   title,
@@ -24,10 +30,14 @@ const DescriptionItem = ({
   </div>
 );
 
-const FileOverview = ({ className }: { className: string }) => {
-  const { overview } = useModel('overview');
-  const { previewState, setPreviewState, edit, save, hasEdited } =
-    useModel('preview');
+export const FileSaveButton = ({
+  path,
+  type = 'text',
+}: {
+  path: string;
+  type?: any;
+}) => {
+  const { setPreviewState, save } = useModel('preview');
 
   const saveHandler = async (path: string) => {
     const result = await save(path);
@@ -43,6 +53,18 @@ const FileOverview = ({ className }: { className: string }) => {
     setPreviewState(null);
   };
 
+  return (
+    <Button
+      type={type}
+      onClick={() => saveHandler(path)}
+      icon={<SaveOutlined />}
+    />
+  );
+};
+
+export const FileCloseButton = ({ type = 'text' }) => {
+  const { setPreviewState, hasEdited } = useModel('preview');
+
   const closeHandler = () => {
     const needConfirm = hasEdited();
     if (needConfirm) {
@@ -57,37 +79,64 @@ const FileOverview = ({ className }: { className: string }) => {
     }
   };
 
-  const FileDownloadButton = ({ path }: { path: string }) => {
-    return (
-      <Button
-        type="text"
-        onClick={() => download(path)}
-        icon={<DownloadOutlined />}
-      />
-    );
-  };
+  return (
+    <Button
+      type={type as any}
+      onClick={closeHandler}
+      icon={<CloseOutlined />}
+    />
+  );
+};
 
-  const FileEditButton = ({ path }: { path: string }) => {
+const FileDownloadButton = ({ path }: { path: string }) => {
+  return (
+    <Button
+      type="text"
+      onClick={() => download(path)}
+      icon={<DownloadOutlined />}
+    />
+  );
+};
+
+const FilePreviewButton = ({ path }: { path: string }) => {
+  const { playerState, pause, play } = useModel('player');
+  const { edit } = useModel('preview');
+  const fileName = p.basename(path);
+  const mimeType = lookup(fileName) || 'text/plain';
+
+  if (mimeType.startsWith('text/') || mimeType.startsWith('application/')) {
     return (
       <Button type="text" onClick={() => edit(path)} icon={<EditOutlined />} />
     );
-  };
-
-  const FileSaveButton = ({ path }: { path: string }) => {
+  } else if (mimeType.startsWith('audio/')) {
+    if (playerState.path === path && playerState.status === 'playing') {
+      return (
+        <Button
+          type="text"
+          onClick={() => pause()}
+          icon={<PauseCircleOutlined />}
+        />
+      );
+    }
     return (
       <Button
         type="text"
-        onClick={() => saveHandler(path)}
-        icon={<SaveOutlined />}
+        onClick={() =>
+          play(path).catch(() =>
+            notification.error({ message: 'Connection aborted' }),
+          )
+        }
+        icon={<PlayCircleOutlined />}
       />
     );
-  };
+  } else {
+    return null;
+  }
+};
 
-  const FileCloseButton = () => {
-    return (
-      <Button type="text" onClick={closeHandler} icon={<CloseOutlined />} />
-    );
-  };
+const FileOverview = ({ className }: { className: string }) => {
+  const { overview } = useModel('overview');
+  const { previewState } = useModel('preview');
 
   return (
     <Card
@@ -96,14 +145,12 @@ const FileOverview = ({ className }: { className: string }) => {
       extra={
         overview?.path &&
         overview.isFile && [
-          previewState?.isEditing && (
-            <FileCloseButton key="close" path={overview?.path} />
-          ),
+          previewState?.isEditing && <FileCloseButton key="close" />,
           previewState?.isEditing && (
             <FileSaveButton key="save" path={overview?.path} />
           ),
           !previewState?.isEditing && (
-            <FileEditButton key="edit" path={overview?.path} />
+            <FilePreviewButton key="preview" path={overview?.path} />
           ),
           !previewState?.isEditing && (
             <FileDownloadButton key="download" path={overview?.path} />

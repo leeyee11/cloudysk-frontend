@@ -27,6 +27,7 @@ const FileToolsBar = () => {
   const { path, cd, refresh } = useModel('global');
   const { openCreator, state: creatorState } = useModel('creator');
   const { layout, switchLayout } = useModel('layout');
+  const { previewState } = useModel('preview');
 
   const handleUpload = (info: UploadChangeParam<UploadFile<any>>) => {
     const { status } = info.file;
@@ -45,46 +46,52 @@ const FileToolsBar = () => {
   return (
     <div className={styles.fileToolsBar}>
       <Prompt state={creatorState} />
-      <Space className={styles.fileToolsNav}>
-        <Button
-          disabled={path === '/'}
-          icon={<ArrowUpOutlined />}
-          type="primary"
-          title="Go to parent folder"
-          onClick={() => cd('..')}
-        ></Button>
-        <Button
-          icon={<FolderAddOutlined />}
-          title="Create new folder"
-          onClick={() => openCreator(CreateTypes.NewFolder, path)}
-        ></Button>
-        <Button
-          icon={<FileAddOutlined />}
-          title="Create new file"
-          onClick={() => openCreator(CreateTypes.NewFile, path)}
-        ></Button>
-        <Button
-          icon={draggerOpen ? <PaperClipOutlined /> : <UploadOutlined />}
-          title="Upload files"
-          onClick={() => setDraggerOpen((open) => !open)}
-        ></Button>
-        <Button
-          icon={
-            layout === LayoutTypes.Grid ? (
-              <UnorderedListOutlined />
-            ) : (
-              <AppstoreOutlined />
-            )
-          }
-          title="Switch layout"
-          onClick={switchLayout}
-        ></Button>
-        <Button
-          icon={<ReloadOutlined />}
-          title="Refresh"
-          onClick={refresh}
-        ></Button>
-      </Space>
+      {previewState?.isEditing ? (
+        <Space className={styles.fileToolsNav}>
+          <Title level={5}>{previewState.path}</Title>
+        </Space>
+      ) : (
+        <Space className={styles.fileToolsNav}>
+          <Button
+            disabled={path === '/'}
+            icon={<ArrowUpOutlined />}
+            type="primary"
+            title="Go to parent folder"
+            onClick={() => cd('..')}
+          ></Button>
+          <Button
+            icon={<FolderAddOutlined />}
+            title="Create new folder"
+            onClick={() => openCreator(CreateTypes.NewFolder, path)}
+          ></Button>
+          <Button
+            icon={<FileAddOutlined />}
+            title="Create new file"
+            onClick={() => openCreator(CreateTypes.NewFile, path)}
+          ></Button>
+          <Button
+            icon={draggerOpen ? <PaperClipOutlined /> : <UploadOutlined />}
+            title="Upload files"
+            onClick={() => setDraggerOpen((open) => !open)}
+          ></Button>
+          <Button
+            icon={
+              layout === LayoutTypes.Grid ? (
+                <UnorderedListOutlined />
+              ) : (
+                <AppstoreOutlined />
+              )
+            }
+            title="Switch layout"
+            onClick={switchLayout}
+          ></Button>
+          <Button
+            icon={<ReloadOutlined />}
+            title="Refresh"
+            onClick={refresh}
+          ></Button>
+        </Space>
+      )}
       <div
         className={classnames(
           styles.fileDraggerContainer,
