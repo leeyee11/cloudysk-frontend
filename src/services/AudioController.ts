@@ -11,17 +11,17 @@ class AudioController {
     new Map();
 
   constructor() {
-    this.audio.volume = 0.3;
+    this.audio.volume = 1;
     this.source.connect(this.context.destination);
-    this.context.audioWorklet.addModule('hiss-generator.js').then(() => {
-      this.processor = new AudioWorkletNode(this.context, 'visual-render');
-      this.analyser = new AnalyserNode(this.context);
-      this.processor.connect(this.context.destination);
-      //analyser connect to processor
-      this.analyser.connect(this.processor);
-      //source connect
-      this.source.connect(this.analyser);
-    });
+    // this.context.audioWorklet.addModule('hiss-generator.js').then(() => {
+    //   this.processor = new AudioWorkletNode(this.context, 'visual-render');
+    //   this.analyser = new AnalyserNode(this.context);
+    //   this.processor.connect(this.context.destination);
+    //   //analyser connect to processor
+    //   this.analyser.connect(this.processor);
+    //   //source connect
+    //   this.source.connect(this.analyser);
+    // });
     this.setupCallbacks();
   }
 
@@ -66,6 +66,30 @@ class AudioController {
   pause = () => {
     this.audio.pause();
   };
+
+  resume = () => {
+    this.audio.play();
+  };
+
+  stop = () => {
+    this.audio.pause();
+  };
+
+  get currentTime() {
+    return this.audio.currentTime;
+  }
+
+  set currentTime(value: number) {
+    this.audio.currentTime = value;
+  }
+
+  get volume() {
+    return this.audio.volume;
+  }
+
+  set volume(value: number) {
+    this.audio.volume = value;
+  }
 }
 
 const createAudioController = () => {

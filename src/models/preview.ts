@@ -10,8 +10,8 @@ interface PreviewState {
 
 const usePreview = () => {
   const [previewState, setPreviewState] = useState<PreviewState | null>(null);
-  const editorRef = useRef();
-  const containerRef = useRef();
+  const editorRef = useRef<any>();
+  const containerRef = useRef<HTMLElement>();
 
   const edit = async (path: string) => {
     const blob = await getFile({ path });
@@ -25,7 +25,7 @@ const usePreview = () => {
   };
 
   const save = async (path: string) => {
-    const editor = editorRef.current as any;
+    const editor = editorRef.current;
     const model = editor.getModel();
     const value = model.getValue();
     const result = putPlainFile({ path }, value);

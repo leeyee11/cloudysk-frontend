@@ -1,0 +1,113 @@
+.floatAudioPlayer {
+  height: 64px;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  position: fixed;
+  bottom: 0;
+  transition: width 0.2s;
+  padding: 8px 40px;
+  box-sizing: border-box;
+  background-color: #fff;
+  border-top: 1px solid #dfdfdf;
+
+  .controlButtonGroups {
+    min-width: 120px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .controlButton {
+      display: block;
+    }
+  }
+
+  .audioOverview {
+    display: flex;
+    flex: 1 0 auto;
+    margin: 0 16px;
+
+    .audioAvatarContainer {
+      width: 48px;
+      height: 48px;
+      cursor: pointer;
+
+      .audioAvatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 24px;
+      }
+    }
+
+    .audioDetails {
+      height: 48px;
+      flex: 1 0 auto;
+      margin-left: 16px;
+      display: flex;
+      flex-direction: column;
+
+      .audioHeader {
+        height: 24px;
+        width: 100%;
+        display: flex;
+        padding-right: 96px;
+        gap: 8px;
+        justify-content: space-between;
+
+        .audioTitle {
+          display: flex;
+          font-weight: 500;
+          cursor: pointer;
+          justify-content: start;
+        }
+
+        .audioLyric {
+          display: flex;
+          justify-content: end;
+          font-weight: 500;
+          color: #fff;
+          user-select: none;
+          cursor: default;
+          text-shadow: 0 0 2px #000;
+          position: relative;
+        }
+
+        .audioLyric::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          right: 0;
+          background: linear-gradient(to right, #dc2424, #4a569d);
+          mix-blend-mode: screen;
+        }
+      }
+
+      .audioProgression {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .slider {
+          flex: 1 0 auto;
+        }
+
+        .timing {
+          min-width: 96px;
+          color: #888;
+          font-weight: 500;
+          display: flex;
+          justify-content: end;
+          align-items: center;
+          cursor: default;
+        }
+      }
+    }
+  }
+
+  .settingGroup {
+    background-color: blue;
+    min-width: 180px;
+  }
+}

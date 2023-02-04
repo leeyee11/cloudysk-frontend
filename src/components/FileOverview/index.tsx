@@ -14,6 +14,7 @@ import { lookup } from 'mime-types';
 import path from 'path-browserify';
 import dayjs from 'dayjs';
 import styles from './index.less';
+import { PlayerStatus } from '@/models/audio-player';
 
 const p = path;
 
@@ -99,7 +100,11 @@ const FileDownloadButton = ({ path }: { path: string }) => {
 };
 
 const FilePreviewButton = ({ path }: { path: string }) => {
-  const { playerState, pause, play } = useModel('player');
+  const {
+    state: audioPlayerState,
+    pause: pauseAudio,
+    play: playAudio,
+  } = useModel('audio-player');
   const { edit } = useModel('preview');
   const fileName = p.basename(path);
   const mimeType = lookup(fileName) || 'text/plain';
@@ -109,11 +114,14 @@ const FilePreviewButton = ({ path }: { path: string }) => {
       <Button type="text" onClick={() => edit(path)} icon={<EditOutlined />} />
     );
   } else if (mimeType.startsWith('audio/')) {
-    if (playerState.path === path && playerState.status === 'playing') {
+    if (
+      audioPlayerState.path === path &&
+      audioPlayerState.status === PlayerStatus.Playing
+    ) {
       return (
         <Button
           type="text"
-          onClick={() => pause()}
+          onClick={() => pauseAudio()}
           icon={<PauseCircleOutlined />}
         />
       );
@@ -122,9 +130,10 @@ const FilePreviewButton = ({ path }: { path: string }) => {
       <Button
         type="text"
         onClick={() =>
-          play(path).catch(() =>
-            notification.error({ message: 'Connection aborted' }),
-          )
+          playAudio(path).catch((err) => {
+            console.log(err);
+            notification.error({ message: 'Connection aborted' });
+          })
         }
         icon={<PlayCircleOutlined />}
       />

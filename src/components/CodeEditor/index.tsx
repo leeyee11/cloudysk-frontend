@@ -3,6 +3,11 @@ import { useModel } from '@umijs/max';
 import { useEffect, useRef } from 'react';
 import { debounce } from 'lodash-es';
 
+const GLOBAL_HEADER_HEIGHT = 56;
+const PAGE_HEADER_HEIGHT = 111;
+const PAGE_CONTAINER_PADDING = 16;
+const PAGE_FOOTER_HEIGHT = 64;
+
 const CodeEditor = () => {
   const editorMaxHeight = useRef(720);
   const { previewState, editorRef, containerRef } = useModel('preview');
@@ -15,7 +20,11 @@ const CodeEditor = () => {
     }
     const containerWidth = containerRef.current.getBoundingClientRect().width;
     editorMaxHeight.current =
-      document.body.getBoundingClientRect().height - 200;
+      document.body.getBoundingClientRect().height -
+      (GLOBAL_HEADER_HEIGHT +
+        PAGE_HEADER_HEIGHT +
+        PAGE_CONTAINER_PADDING +
+        PAGE_FOOTER_HEIGHT);
     editorElement.style.width = `${containerWidth - 300 - 12}px`;
     editorElement.style.height = `${editorMaxHeight.current}px`;
     editor.layout();
