@@ -169,7 +169,7 @@ const FilePreviewButton = ({ path }: { path: string }) => {
   const {
     state: audioPlayerState,
     pause: pauseAudio,
-    play: playAudio,
+    playList: playAudio,
   } = useModel('audio-player');
   const { edit } = useModel('preview');
   const fileName = p.basename(path);
@@ -196,7 +196,7 @@ const FilePreviewButton = ({ path }: { path: string }) => {
       <Button
         type="text"
         onClick={() =>
-          playAudio(path).catch((err) => {
+          playAudio([path], 0).catch((err) => {
             console.log(err);
             notification.error({ message: 'Connection aborted' });
           })
