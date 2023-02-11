@@ -62,25 +62,28 @@
         }
 
         .audioLyric {
-          display: flex;
-          justify-content: end;
-          font-weight: 500;
-          color: #fff;
-          user-select: none;
-          cursor: default;
-          text-shadow: 0 0 2px #000;
-          position: relative;
-        }
+          // background-color: #000;
+          .lyric {
+            display: flex;
+            justify-content: end;
+            font-weight: 500;
+            color: #fff;
+            user-select: none;
+            cursor: default;
+            text-shadow: 0 0 2px #000;
+            position: relative;
+          }
 
-        .audioLyric::after {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          bottom: 0;
-          right: 0;
-          background: linear-gradient(to right, #dc2424, #4a569d);
-          mix-blend-mode: screen;
+          .lyric::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(to bottom, #dc2424, #4a569d);
+            mix-blend-mode: screen;
+          }
         }
       }
 

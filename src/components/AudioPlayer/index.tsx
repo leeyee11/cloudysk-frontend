@@ -123,7 +123,9 @@ export const FloatAudioPlayer = () => {
             <div className={styles.audioTitle}>
               {state.path && p.basename(state.path).split('.').shift()}
             </div>
-            <div className={styles.audioLyric}>{displayData.lyric}</div>
+            <div className={styles.audioLyric}>
+              <div className={styles.lyric}>{displayData.lyric}</div>
+            </div>
           </div>
           <div className={styles.audioProgression}>
             <div className={styles.slider}>

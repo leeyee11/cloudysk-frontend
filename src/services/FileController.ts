@@ -1,5 +1,6 @@
 /* eslint-disable */
 import { request } from '@umijs/max';
+import { API } from './typings';
 import type { PathLike } from 'fs-extra';
 
 /** GET /api/v1/folder */
@@ -10,6 +11,22 @@ export async function getFolder(
   options?: { [key: string]: any },
 ) {
   return request<API.Result_FolderStats>('/api/v1/folder', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
+/** GET /api/v1/collection */
+export async function getCollection(
+  params: {
+    name: string;
+  },
+  options?: { [key: string]: any },
+) {
+  return request<API.Result_FolderStats>('/api/v1/collection', {
     method: 'GET',
     params: {
       ...params,

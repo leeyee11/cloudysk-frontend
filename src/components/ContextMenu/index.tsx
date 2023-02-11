@@ -20,7 +20,7 @@ export enum ContextMenuItems {
 interface ContextMenuProps {
   children: React.ReactNode | React.ReactNode[];
   name: string | null;
-  path: string;
+  path?: string;
   items: ContextMenuItems[];
 }
 
@@ -67,18 +67,20 @@ const ContextMenu = ({ children, path, name, items }: ContextMenuProps) => {
     }
   };
 
-  const menuItems = items.map((label, index) => ({
-    key: index,
-    label: (
-      <Button
-        type="text"
-        onClick={() => handleMenuItemClick(path, name, label)}
-        disabled={label === ContextMenuItems.Paste && !exist()}
-      >
-        {label}
-      </Button>
-    ),
-  }));
+  const menuItems = path
+    ? items.map((label, index) => ({
+        key: index,
+        label: (
+          <Button
+            type="text"
+            onClick={() => handleMenuItemClick(path, name, label)}
+            disabled={label === ContextMenuItems.Paste && !exist()}
+          >
+            {label}
+          </Button>
+        ),
+      }))
+    : [];
   return (
     <Dropdown
       trigger={['contextMenu']}
