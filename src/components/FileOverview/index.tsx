@@ -6,10 +6,13 @@ import {
   PauseCircleOutlined,
   SaveOutlined,
   CloseOutlined,
+  StarOutlined,
+  StarFilled,
 } from '@ant-design/icons';
 import { useModel } from '@umijs/max';
 import { humanizeSize } from '@/utils/format';
 import { download } from '@/utils/download';
+import { star, unstar } from '@/utils/mark';
 import { lookup } from 'mime-types';
 import path from 'path-browserify';
 import dayjs from 'dayjs';
@@ -99,6 +102,24 @@ const FileDownloadButton = ({ path }: { path: string }) => {
   );
 };
 
+const FileStarButton = ({
+  path,
+  starId,
+}: {
+  path: string;
+  starId?: number;
+}) => {
+  return !!starId ? (
+    <Button type="text" onClick={() => unstar(starId)} icon={<StarFilled />} />
+  ) : (
+    <Button
+      type="text"
+      onClick={() => star(path, 'file')}
+      icon={<StarOutlined />}
+    />
+  );
+};
+
 const FilePreviewButton = ({ path }: { path: string }) => {
   const {
     state: audioPlayerState,
@@ -157,6 +178,13 @@ const FileOverview = ({ className }: { className: string }) => {
           previewState?.isEditing && <FileCloseButton key="close" />,
           previewState?.isEditing && (
             <FileSaveButton key="save" path={overview?.path} />
+          ),
+          !previewState?.isEditing && (
+            <FileStarButton
+              key="star"
+              path={overview?.path}
+              starId={overview?.starId}
+            />
           ),
           !previewState?.isEditing && (
             <FilePreviewButton key="preview" path={overview?.path} />

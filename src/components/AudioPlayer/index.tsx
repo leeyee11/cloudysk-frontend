@@ -7,12 +7,13 @@ import {
   StepForwardOutlined,
   CaretRightOutlined,
   CloseOutlined,
-  NotificationOutlined,
+  SoundFilled,
   RetweetOutlined,
   PauseOutlined,
 } from '@ant-design/icons';
 import { Button, Slider, Popover } from 'antd';
 import { PlayerState } from '@/models/audio-player';
+import { INITIAL_VOLUME } from '@/services/AudioController';
 import path from 'path-browserify';
 import Disc from './icons/disc';
 import styles from './index.less';
@@ -40,7 +41,7 @@ export const FloatAudioPlayer = () => {
   const [displayData, setDisplayData] = useState<PlayerDisplayData>({
     currentTime: 0,
     duration: 1,
-    volume: 1,
+    volume: INITIAL_VOLUME
   });
   const routeValue = useContext(RouteContext);
   const audioPlayerWidth = useMemo(
@@ -123,7 +124,9 @@ export const FloatAudioPlayer = () => {
             <div className={styles.audioTitle}>
               {state.path && p.basename(state.path).split('.').shift()}
             </div>
-            <div className={styles.audioLyric}>{displayData.lyric}</div>
+            <div className={styles.audioLyric}>
+              <div className={styles.lyric}>{displayData.lyric}</div>
+            </div>
           </div>
           <div className={styles.audioProgression}>
             <div className={styles.slider}>
@@ -147,27 +150,22 @@ export const FloatAudioPlayer = () => {
         </div>
       </div>
       <div className={styles.controlButtonGroups}>
-        <Popover
-          trigger="hover"
-          content={
-            <Slider
-              style={{ width: 96 }}
-              value={displayData.volume}
-              min={0}
-              max={1}
-              step={0.01}
-              tooltip={{ open: false }}
-              onChange={(value) => (ref.current.volume = value)}
-            />
-          }
-        >
-          <Button
-            className={styles.controlButton}
-            type="text"
-            shape="circle"
-            icon={<NotificationOutlined style={{ color: '#555' }} />}
-          />
-        </Popover>
+        <Button
+          className={styles.controlButton}
+          type="text"
+          shape="circle"
+          icon={<SoundFilled style={{ color: '#555' }} />}
+        />
+        <Slider
+          className={styles.volumeSlider}
+          style={{ width: 48 }}
+          value={displayData.volume}
+          min={0}
+          max={1}
+          step={0.01}
+          tooltip={{ open: false }}
+          onChange={(value) => (ref.current.volume = value)}
+        />
         <Button
           className={styles.controlButton}
           type="text"

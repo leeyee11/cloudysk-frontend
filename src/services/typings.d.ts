@@ -3,6 +3,15 @@
 import { FileStats } from 'typings';
 
 declare namespace API {
+  interface Bookmark {
+    path: string;
+    type: 'file' | 'directory';
+    collection: 'star' | 'music' | 'video';
+    category: 'default' | string;
+  }
+
+  type BookmarkRecord = Bookmark & { _id: number };
+
   interface PageInfo {
     /** 
 1 */
@@ -80,4 +89,21 @@ declare namespace API {
   }
 
   type definitions_0 = null;
+
+  interface Result_Bookmark {
+    success?: boolean;
+    errorMessage?: string;
+    data?: BookmarkRecord;
+  }
+
+  interface Result_Bookmarks {
+    success?: boolean;
+    errorMessage?: string;
+    data?: BookmarkRecord[];
+  }
+
+  interface Result_Status {
+    success?: boolean;
+    errorMessage?: string;
+  }
 }

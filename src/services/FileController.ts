@@ -1,5 +1,6 @@
 /* eslint-disable */
 import { request } from '@umijs/max';
+import { API } from './typings';
 import type { PathLike } from 'fs-extra';
 
 /** GET /api/v1/folder */
