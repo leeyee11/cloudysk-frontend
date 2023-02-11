@@ -16,7 +16,7 @@ import Prompt from '@/components/Prompt';
 import styles from './index.less';
 import classnames from 'classnames';
 import { UploadChangeParam, UploadFile } from 'antd/lib/upload';
-import { CreateTypes } from '@/models/creator';
+import { CreateTypes } from '@/models/inquiry';
 import { LayoutTypes } from '@/models/layout';
 
 const { Paragraph, Title, Text } = Typography;
@@ -25,7 +25,7 @@ const { Dragger } = Upload;
 const FileToolsBar = () => {
   const [draggerOpen, setDraggerOpen] = useState<boolean>(false);
   const { path, cd, refresh } = useModel('global');
-  const { openCreator, state: creatorState } = useModel('creator');
+  const { openInquiry, state: inquiryState } = useModel('inquiry');
   const { layout, switchLayout } = useModel('layout');
   const { previewState } = useModel('preview');
 
@@ -45,7 +45,7 @@ const FileToolsBar = () => {
 
   return (
     <div className={styles.fileToolsBar}>
-      <Prompt state={creatorState} />
+      <Prompt state={inquiryState} />
       {path &&
         (previewState?.isEditing ? (
           <Space className={styles.fileToolsNav}>
@@ -63,12 +63,16 @@ const FileToolsBar = () => {
             <Button
               icon={<FolderAddOutlined />}
               title="Create new folder"
-              onClick={() => openCreator(CreateTypes.NewFolder, path)}
+              onClick={() =>
+                openInquiry(CreateTypes.NewFolder, path).then(refresh)
+              }
             ></Button>
             <Button
               icon={<FileAddOutlined />}
               title="Create new file"
-              onClick={() => openCreator(CreateTypes.NewFile, path)}
+              onClick={() =>
+                openInquiry(CreateTypes.NewFile, path).then(refresh)
+              }
             ></Button>
             <Button
               icon={draggerOpen ? <PaperClipOutlined /> : <UploadOutlined />}

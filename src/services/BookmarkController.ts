@@ -37,7 +37,9 @@ export async function queryMarkers(
 /** DELETE /api/v1/bookmark */
 export async function remove(
   params: {
-    id: string;
+    path: string;
+    collection: string;
+    category: string;
   },
   options?: { [key: string]: any },
 ) {
@@ -52,7 +54,7 @@ export async function remove(
 
 /** POST /api/v1/bookmark */
 export async function update(
-  body?: API.Bookmark,
+  body?: API.AudioMarks,
   options?: { [key: string]: any },
 ) {
   return request<API.Result_Bookmark>('/api/v1/bookmark', {
@@ -70,6 +72,14 @@ export async function create(
   return request<API.Result_Bookmark>('/api/v1/bookmark', {
     method: 'PUT',
     data: body,
+    ...(options || {}),
+  });
+}
+
+/** GET /api/v1/categories */
+export async function getCategories(options?: { [key: string]: any }) {
+  return request<API.Result_Categories>('/api/v1/categories', {
+    method: 'GET',
     ...(options || {}),
   });
 }
