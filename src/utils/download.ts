@@ -1,5 +1,5 @@
 import { getFile } from '@/services/FileController';
-import path from 'path';
+import path from 'path-browserify';
 
 const p = path;
 
