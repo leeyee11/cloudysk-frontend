@@ -4,7 +4,7 @@ const TIMESTAMP_ONLY_PATTERN = /^(\[\d+\:\d{2}\.\d*\])$/;
 const TIMESTAMP_PATTERN = /(\d+)\:(\d{2}.\d*)/;
 const DESCRIPTION_PATTERN = /^\[(.*?)\]$/;
 
-interface LyricLine {
+export interface LyricLine {
   timestamp: number;
   text: string;
 }
@@ -52,6 +52,10 @@ class LyricHelper {
   public getLine(currentTime: number) {
     return this.dictionary.filter((line) => currentTime > line.timestamp)?.pop()
       ?.text;
+  }
+
+  public getFullLyrics() {
+    return this.dictionary;
   }
 }
 

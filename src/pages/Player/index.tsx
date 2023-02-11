@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useModel } from '@umijs/max';
 import PlayerListView from '@/components/PlayerListView';
 import styles from './index.less';
+import VisualAudio from '@/components/VisualAudio';
 
 const Player = () => {
   const { view } = useModel('global');
@@ -12,7 +13,7 @@ const Player = () => {
   return (
     <div className={styles.container}>
       <PlayerListView className={styles.playlist} />
-      <div className={styles.visualAudio}></div>
+      <VisualAudio className={styles.visualAudio} />
     </div>
   );
 };

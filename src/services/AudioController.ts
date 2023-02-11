@@ -3,12 +3,12 @@ type AudioLifecycleEvent = 'play' | 'end' | 'pause' | 'canplay' | 'abort';
 export const INITIAL_VOLUME = 0.25;
 
 class AudioController {
-  private ready = false;
+  public ready = false;
   public context!: AudioContext;
   public audio!: HTMLAudioElement;
   public source!: MediaElementAudioSourceNode;
 
-  public processor!: AudioWorkletNode;
+  public processor!: ScriptProcessorNode;
   public analyser!: AnalyserNode;
   private callbackMap: Map<AudioLifecycleEvent, ((ev: Event) => void)[]> =
     new Map();
@@ -19,16 +19,15 @@ class AudioController {
     this.source = this.context.createMediaElementSource(this.audio);
     this.audio.volume = 0.25;
     this.source.connect(this.context.destination);
-    this.ready = true; 
-    // this.context.audioWorklet.addModule('hiss-generator.js').then(() => {
-    //   this.processor = new AudioWorkletNode(this.context, 'visual-render');
-    //   this.analyser = new AnalyserNode(this.context);
-    //   this.processor.connect(this.context.destination);
-    //   //analyser connect to processor
-    //   this.analyser.connect(this.processor);
-    //   //source connect
-    //   this.source.connect(this.analyser);
-    // });
+    this.ready = true;
+    this.processor = this.context.createScriptProcessor(1024);
+    this.analyser = this.context.createAnalyser();
+    this.processor.connect(this.context.destination);
+    // analyser connect to processor
+    this.analyser.connect(this.processor);
+    // source connect
+    this.source.connect(this.analyser);
+    // setup callbacks
     this.setupCallbacks();
   }
 
@@ -100,6 +99,10 @@ class AudioController {
 
   set volume(value: number) {
     this.audio.volume = value;
+  }
+
+  get duration() {
+    return this.audio.duration;
   }
 }
 

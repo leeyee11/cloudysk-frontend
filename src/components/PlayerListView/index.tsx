@@ -15,12 +15,11 @@ const { Panel } = Collapse;
 
 dayjs.extend(relativeTime);
 
-interface FildListViewProps {
-  path?: string;
+interface PlayerListViewProps {
   className: string;
 }
 
-const PlayerListView = ({ className }: FildListViewProps) => {
+const PlayerListView = ({ className }: PlayerListViewProps) => {
   const { fileList, loading } = useModel('global');
   const { overview, setOverview } = useModel('overview');
   const { categories, refresh: refreshCategories } = useModel('category');
@@ -52,6 +51,7 @@ const PlayerListView = ({ className }: FildListViewProps) => {
           }
           playAudio(pathes, index);
         }}
+        key={index}
       >
         <div className={styles.fileLabel}>
           <FileTextOutlined

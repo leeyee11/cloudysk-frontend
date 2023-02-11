@@ -18,12 +18,12 @@ const p = path;
 
 dayjs.extend(relativeTime);
 
-interface FildListViewProps {
+interface FileListViewProps {
   path?: string;
   className: string;
 }
 
-const FileListView = ({ path, className }: FildListViewProps) => {
+const FileListView = ({ path, className }: FileListViewProps) => {
   const { fileList, cd, loading } = useModel('global');
   const { overview, setOverview } = useModel('overview');
 

@@ -145,6 +145,8 @@ const usePlayer = () => {
   const getLyric = (currentTime: number) =>
     lyricHelperRef.current?.getLine(currentTime);
 
+  const getFullLyrics = () => lyricHelperRef.current?.getFullLyrics();
+
   return {
     listState,
     state,
@@ -154,6 +156,7 @@ const usePlayer = () => {
     next,
     prev,
     getLyric,
+    getFullLyrics,
     playList,
     ref: audioControllerRef,
   };

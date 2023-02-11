@@ -18,7 +18,7 @@ const CodeEditor = () => {
     if (!editorElement) {
       return;
     }
-    const containerWidth = containerRef.current.getBoundingClientRect().width;
+    const containerWidth = containerRef.current!.getBoundingClientRect().width;
     editorMaxHeight.current =
       document.body.getBoundingClientRect().height -
       (GLOBAL_HEADER_HEIGHT +
@@ -49,7 +49,7 @@ const CodeEditor = () => {
       key={previewState.createdTimestamp}
       language="javascript"
       theme="vs-light"
-      value={previewState.data}
+      value={previewState.data as string}
       options={{ scrollBeyondLastLine: false }}
       editorDidMount={(editor) => {
         editorRef.current = editor;
