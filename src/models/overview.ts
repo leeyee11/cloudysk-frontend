@@ -18,7 +18,7 @@ const useOverview = () => {
       queryMarkers({ path: overview?.path }).then((result) => {
         const starId = result.data?.find(
           (marker) => marker.collection === 'star',
-        )?._id;
+        )?.id;
         setOverview({ ...overview, starId });
       });
     }
