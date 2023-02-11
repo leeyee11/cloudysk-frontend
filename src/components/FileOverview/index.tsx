@@ -6,10 +6,13 @@ import {
   PauseCircleOutlined,
   SaveOutlined,
   CloseOutlined,
+  StarOutlined,
+  StarFilled,
 } from '@ant-design/icons';
-import { useModel } from '@umijs/max';
+import { useModel, history } from '@umijs/max';
 import { humanizeSize } from '@/utils/format';
 import { download } from '@/utils/download';
+import { star, unstar } from '@/utils/mark';
 import { lookup } from 'mime-types';
 import path from 'path-browserify';
 import dayjs from 'dayjs';
@@ -99,6 +102,34 @@ const FileDownloadButton = ({ path }: { path: string }) => {
   );
 };
 
+const FileStarButton = ({
+  path,
+  type,
+  starId,
+}: {
+  path: string;
+  type: 'file' | 'directory';
+  starId?: string;
+}) => {
+  const { refresh: refreshOverview } = useModel('overview');
+  const { refresh: refreshGlobal } = useModel('global');
+  const isInStarPage = () => history.location.pathname === '/star';
+  const refresh = () => (isInStarPage() ? refreshGlobal() : refreshOverview());
+  return !!starId ? (
+    <Button
+      type="text"
+      onClick={() => unstar(starId).then(refresh)}
+      icon={<StarFilled />}
+    />
+  ) : (
+    <Button
+      type="text"
+      onClick={() => star(path, type).then(refresh)}
+      icon={<StarOutlined />}
+    />
+  );
+};
+
 const FilePreviewButton = ({ path }: { path: string }) => {
   const {
     state: audioPlayerState,
@@ -148,43 +179,65 @@ const FileOverview = ({ className }: { className: string }) => {
   const { previewState } = useModel('preview');
 
   return (
-    <Card
-      title={<div title={overview?.name}>{overview?.name}</div>}
-      className={className}
-      extra={
-        overview?.path &&
-        overview.isFile && [
-          previewState?.isEditing && <FileCloseButton key="close" />,
-          previewState?.isEditing && (
-            <FileSaveButton key="save" path={overview?.path} />
-          ),
-          !previewState?.isEditing && (
-            <FilePreviewButton key="preview" path={overview?.path} />
-          ),
-          !previewState?.isEditing && (
-            <FileDownloadButton key="download" path={overview?.path} />
-          ),
-        ]
-      }
-    >
-      <DescriptionItem
-        title="Size"
-        content={humanizeSize(overview?.size ?? 0)}
-      />
-      <DescriptionItem
-        title="Created"
-        content={dayjs(overview?.birthtime).format('YYYY-MM-DD ddd HH:mm')}
-      />
-      <DescriptionItem
-        title="Modified"
-        content={dayjs(overview?.mtime).format('YYYY-MM-DD ddd HH:mm  ')}
-      />
-      <DescriptionItem title="Mode" content={overview?.mode} />
-      <DescriptionItem title="Location" content={overview?.path} />
-      {overview?.isDirectory && (
-        <DescriptionItem title="Children" content={overview.children?.length} />
-      )}
-    </Card>
+    overview && (
+      <Card
+        title={<div title={overview?.name}>{overview?.name}</div>}
+        className={className}
+        extra={
+          overview?.path &&
+          (overview.isFile
+            ? [
+                previewState?.isEditing && <FileCloseButton key="close" />,
+                previewState?.isEditing && (
+                  <FileSaveButton key="save" path={overview?.path} />
+                ),
+                !previewState?.isEditing && (
+                  <FileStarButton
+                    key="star"
+                    type="file"
+                    path={overview?.path}
+                    starId={overview?.starId}
+                  />
+                ),
+                !previewState?.isEditing && (
+                  <FilePreviewButton key="preview" path={overview?.path} />
+                ),
+                !previewState?.isEditing && (
+                  <FileDownloadButton key="download" path={overview?.path} />
+                ),
+              ]
+            : [
+                <FileStarButton
+                  key="star"
+                  type="directory"
+                  path={overview?.path}
+                  starId={overview?.starId}
+                />,
+              ])
+        }
+      >
+        <DescriptionItem
+          title="Size"
+          content={humanizeSize(overview?.size ?? 0)}
+        />
+        <DescriptionItem
+          title="Created"
+          content={dayjs(overview?.birthtime).format('YYYY-MM-DD ddd HH:mm')}
+        />
+        <DescriptionItem
+          title="Modified"
+          content={dayjs(overview?.mtime).format('YYYY-MM-DD ddd HH:mm  ')}
+        />
+        <DescriptionItem title="Mode" content={overview?.mode} />
+        <DescriptionItem title="Location" content={overview?.path} />
+        {overview?.isDirectory && (
+          <DescriptionItem
+            title="Children"
+            content={overview.children?.length}
+          />
+        )}
+      </Card>
+    )
   );
 };
 

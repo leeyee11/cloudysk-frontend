@@ -31,7 +31,7 @@ const FileGridView = ({ path, className }: FildGridViewProps) => {
     return (
       <ContextMenu
         key={stats.name}
-        path={path}
+        path={stats.parent}
         name={stats.name}
         items={[
           ContextMenuItems.Copy,
@@ -42,7 +42,7 @@ const FileGridView = ({ path, className }: FildGridViewProps) => {
       >
         <Card.Grid
           hoverable
-          onClick={() => cd(stats.name)}
+          onClick={() => cd(p.resolve(stats.parent, stats.name))}
           className={styles.fileCard}
           onContextMenu={(e) => e.stopPropagation()}
         >
@@ -61,12 +61,12 @@ const FileGridView = ({ path, className }: FildGridViewProps) => {
   };
 
   const renderFileAvatar = (stats: FileStats) => {
-    const filePath = p.resolve(path, stats.name);
-    const isSelected = overview.path === filePath;
+    const filePath = p.resolve(stats.parent, stats.name);
+    const isSelected = overview?.path === filePath;
     return (
       <ContextMenu
         key={stats.name}
-        path={path}
+        path={stats.parent}
         name={stats.name}
         items={[
           ContextMenuItems.Copy,
@@ -82,7 +82,10 @@ const FileGridView = ({ path, className }: FildGridViewProps) => {
             isSelected && styles.selectedFileCard,
           )}
           onContextMenu={(e) => e.stopPropagation()}
-          onClick={() => setOverview({ ...stats, path: filePath })}
+          onClick={() =>
+            filePath !== overview?.path &&
+            setOverview({ ...stats, path: filePath })
+          }
         >
           <FileTextOutlined
             className={styles.fileIcon}

@@ -14,7 +14,7 @@ export default defineConfig({
   routes: [
     {
       path: '/',
-      redirect: '/File',
+      redirect: '/file',
       icon: 'FileTextOutlined',
     },
     {

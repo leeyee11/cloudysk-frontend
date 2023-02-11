@@ -22,4 +22,5 @@ export interface FileStats {
   name: string;
   isFile: boolean;
   isDirectory: boolean;
+  parent: string;
 }
