@@ -1,24 +1,36 @@
 // 全局共享数据示例
 import { BASE_PATH, DEFAULT_FILELIST } from '@/constants';
 import { useState, useEffect } from 'react';
-import { useModel } from '@umijs/max';
-import { getFolder } from '@/services/FileController';
+import { useModel, history } from '@umijs/max';
+import { getFolder, getCollection } from '@/services/FileController';
 import path from 'path-browserify';
 import type { FileStats } from 'typings';
 
 const p = path;
 
+type LocationCursor = {
+  path: string;
+};
+
+type Collection = 'star' | 'audio' | 'video';
+
+type CollectionCursor = {
+  collection: Collection;
+};
+
+type Cursor = LocationCursor | CollectionCursor;
+
 const useFileList = () => {
   const { setOverview } = useModel('overview');
-  const [path, setPath] = useState<string>(BASE_PATH);
+  const [cursor, setCursor] = useState<Cursor>({ path: BASE_PATH });
   const [loading, setLoading] = useState<boolean>(false);
   const [fileList, setFileList] = useState<FileStats[]>(DEFAULT_FILELIST);
   const [lastUpdate, setLastUpdate] = useState<number>(Date.now());
 
-  useEffect(() => {
+  const loadFileListByPath = (path: string) => {
     setFileList([]);
     setLoading(true);
-    getFolder({ path: path })
+    getFolder({ path })
       .then((result) => {
         if (result.success && result.data) {
           const { children } = result.data;
@@ -27,18 +39,56 @@ const useFileList = () => {
         }
       })
       .finally(() => {
+        if (history.location.pathname !== '/file') {
+          history.push('/file');
+        }
         setLoading(false);
       });
-  }, [path, lastUpdate]);
+  };
+
+  const loadFileListByCollection = (collection: string) => {
+    setFileList([]);
+    setLoading(true);
+    getCollection({ name: collection })
+      .then((result) => {
+        if (result.success && result.data) {
+          const { children } = result.data;
+          setFileList(children);
+          setOverview(null);
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    if ((cursor as LocationCursor).path) {
+      loadFileListByPath((cursor as LocationCursor).path);
+    }
+    if ((cursor as CollectionCursor).collection) {
+      loadFileListByCollection((cursor as CollectionCursor).collection);
+    }
+  }, [cursor, lastUpdate]);
 
   return {
     fileList,
-    path,
+    path: (cursor as LocationCursor).path,
     loading,
     setLoading,
     refresh: () => setLastUpdate(Date.now()),
     cd: (param: string) => {
-      setPath((path) => (p.isAbsolute(param) ? param : p.resolve(path, param)));
+      setCursor(
+        (cursor: Cursor) =>
+          ({
+            path: p.isAbsolute(param)
+              ? param
+              : p.resolve((cursor as LocationCursor).path, param),
+          } as Cursor),
+      );
+    },
+    view: (collection: Collection) => {
+      setCursor({ collection } as Cursor);
     },
   };
 };

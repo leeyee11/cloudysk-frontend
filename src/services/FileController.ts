@@ -19,6 +19,22 @@ export async function getFolder(
   });
 }
 
+/** GET /api/v1/collection */
+export async function getCollection(
+  params: {
+    name: string;
+  },
+  options?: { [key: string]: any },
+) {
+  return request<API.Result_FolderStats>('/api/v1/collection', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
 /** PUT /api/v1/plain */
 export async function putPlainFile(
   params: {

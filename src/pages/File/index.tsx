@@ -8,6 +8,8 @@ import FileToolsBar from '@/components/FileToolsBar';
 import FileOverview from '@/components/FileOverview';
 import { LayoutTypes } from '@/models/layout';
 import styles from './index.less';
+import { LegacyRef, useEffect } from 'react';
+import { BASE_PATH } from '@/constants';
 
 const FolderOverview = () => {
   const { path } = useModel('global');
@@ -22,15 +24,25 @@ const FolderOverview = () => {
 
 const FilePage: React.FC = () => {
   const { previewState, containerRef } = useModel('preview');
+  const { cd, path } = useModel('global');
+
+  useEffect(() => {
+    if (!path) {
+      cd(BASE_PATH);
+    }
+  }, []);
 
   return (
     <PageContainer
       header={{
         title: <FileToolsBar />,
-        breadcrumbRender: () => <LocationBar />,
+        breadcrumbRender: () => path && <LocationBar />,
       }}
     >
-      <div className={styles.container} ref={containerRef}>
+      <div
+        className={styles.container}
+        ref={containerRef as LegacyRef<HTMLDivElement>}
+      >
         <div className={styles.folderView}>
           {previewState?.isEditing ? <CodeEditor /> : <FolderOverview />}
           <FileOverview className={styles.fileOverview} />

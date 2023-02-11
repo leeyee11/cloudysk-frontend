@@ -15,8 +15,8 @@ export const star = async (path: string, type: 'file' | 'directory') => {
   }
 };
 
-export const unstar = async (_id: number) => {
-  const result = await remove({ _id });
+export const unstar = async (id: string) => {
+  const result = await remove({ id });
   if (result.success) {
     notification.success({ message: 'Unmark star done' });
   } else {

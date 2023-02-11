@@ -36,12 +36,16 @@ export async function queryMarkers(
 
 /** DELETE /api/v1/bookmark */
 export async function remove(
-  body?: { _id: number },
+  params: {
+    id: string;
+  },
   options?: { [key: string]: any },
 ) {
   return request<API.Result_Status>('/api/v1/bookmark', {
     method: 'DELETE',
-    data: body,
+    params: {
+      ...params,
+    },
     ...(options || {}),
   });
 }

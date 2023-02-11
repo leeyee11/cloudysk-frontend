@@ -19,7 +19,7 @@ const p = path;
 dayjs.extend(relativeTime);
 
 interface FildListViewProps {
-  path: string;
+  path?: string;
   className: string;
 }
 
@@ -31,7 +31,7 @@ const FileListView = ({ path, className }: FildListViewProps) => {
     return (
       <ContextMenu
         key={stats.name}
-        path={path}
+        path={stats.parent}
         name={stats.name}
         items={[
           ContextMenuItems.Copy,
@@ -42,7 +42,7 @@ const FileListView = ({ path, className }: FildListViewProps) => {
       >
         <Card.Grid
           hoverable={false}
-          onClick={() => cd(stats.name)}
+          onClick={() => cd(p.resolve(stats.parent, stats.name))}
           className={styles.fileCard}
           onContextMenu={(e) => e.stopPropagation()}
         >
@@ -70,12 +70,12 @@ const FileListView = ({ path, className }: FildListViewProps) => {
   };
 
   const renderFileAvatar = (stats: FileStats) => {
-    const filePath = p.resolve(path, stats.name);
+    const filePath = p.resolve(stats.parent, stats.name);
     const isSelected = overview?.path === filePath;
     return (
       <ContextMenu
         key={stats.name}
-        path={path}
+        path={stats.parent}
         name={stats.name}
         items={[
           ContextMenuItems.Copy,
@@ -91,7 +91,10 @@ const FileListView = ({ path, className }: FildListViewProps) => {
             isSelected && styles.selectedFileCard,
           )}
           onContextMenu={(e) => e.stopPropagation()}
-          onClick={() => setOverview({ ...stats, path: filePath })}
+          onClick={() =>
+            filePath !== overview?.path &&
+            setOverview({ ...stats, path: filePath })
+          }
         >
           <Row gutter={12}>
             <Col xs={24} sm={18} md={12} xl={18}>

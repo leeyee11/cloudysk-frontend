@@ -10,7 +10,7 @@ declare namespace API {
     category: 'default' | string;
   }
 
-  type BookmarkRecord = Bookmark & { _id: number };
+  type BookmarkRecord = Bookmark & { id: string };
 
   interface PageInfo {
     /** 
