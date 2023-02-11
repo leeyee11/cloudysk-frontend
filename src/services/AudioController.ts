@@ -1,18 +1,25 @@
 type AudioLifecycleEvent = 'play' | 'end' | 'pause' | 'canplay' | 'abort';
 
+export const INITIAL_VOLUME = 0.25;
+
 class AudioController {
-  public context = new AudioContext();
-  public audio = new Audio();
-  public source = this.context.createMediaElementSource(this.audio);
+  private ready = false;
+  public context!: AudioContext;
+  public audio!: HTMLAudioElement;
+  public source!: MediaElementAudioSourceNode;
 
   public processor!: AudioWorkletNode;
   public analyser!: AnalyserNode;
   private callbackMap: Map<AudioLifecycleEvent, ((ev: Event) => void)[]> =
     new Map();
 
-  constructor() {
-    this.audio.volume = 1;
+  private setup() {
+    this.context = new AudioContext();
+    this.audio = new Audio();
+    this.source = this.context.createMediaElementSource(this.audio);
+    this.audio.volume = 0.25;
     this.source.connect(this.context.destination);
+    this.ready = true; 
     // this.context.audioWorklet.addModule('hiss-generator.js').then(() => {
     //   this.processor = new AudioWorkletNode(this.context, 'visual-render');
     //   this.analyser = new AnalyserNode(this.context);
@@ -27,7 +34,6 @@ class AudioController {
 
   private setupCallbacks = () => {
     this.audio.oncanplay = (event: Event) => {
-      this.audio.play();
       this.callbackMap.get('play')?.forEach((fn) => fn(event));
     };
     this.audio.onabort = (event: Event) => {
@@ -60,7 +66,12 @@ class AudioController {
   };
 
   play = (url: string) => {
+    if (!this.ready) {
+      this.setup();
+    }
     this.audio.src = url;
+    this.audio.load();
+    this.audio.play();
   };
 
   pause = () => {

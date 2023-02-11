@@ -47,7 +47,7 @@ const FileListView = ({ path, className }: FildListViewProps) => {
           onContextMenu={(e) => e.stopPropagation()}
         >
           <Row gutter={12}>
-            <Col sm={12} md={18}>
+            <Col xs={24} sm={18} md={12} xl={18}>
               <div className={styles.fileLabel}>
                 <FolderOutlined className={styles.fileIcon} />
                 <div className={styles.fileName} title={stats.name}>
@@ -55,10 +55,10 @@ const FileListView = ({ path, className }: FildListViewProps) => {
                 </div>
               </div>
             </Col>
-            <Col sm={6} md={3}>
+            <Col xs={0} sm={6} md={6} xl={3}>
               <div className={styles.fileSizeInfo}></div>
             </Col>
-            <Col sm={6} md={3}>
+            <Col xs={0} sm={0} md={6} xl={3}>
               <div className={styles.fileDateInfo}>
                 {dayjs(stats.mtime).fromNow()}
               </div>
@@ -97,7 +97,7 @@ const FileListView = ({ path, className }: FildListViewProps) => {
           }
         >
           <Row gutter={12}>
-            <Col sm={12} md={18}>
+            <Col xs={24} sm={18} md={12} xl={18}>
               <div className={styles.fileLabel}>
                 <FileTextOutlined
                   className={styles.fileIcon}
@@ -108,12 +108,12 @@ const FileListView = ({ path, className }: FildListViewProps) => {
                 </div>
               </div>
             </Col>
-            <Col sm={6} md={3}>
+            <Col xs={0} sm={6} md={6} xl={3}>
               <div className={styles.fileSizeInfo}>
                 {humanizeSize(stats.size)}
               </div>
             </Col>
-            <Col sm={6} md={3}>
+            <Col xs={0} sm={0} md={6} xl={3}>
               <div className={styles.fileDateInfo}>
                 {dayjs(stats.mtime).fromNow()}
               </div>
