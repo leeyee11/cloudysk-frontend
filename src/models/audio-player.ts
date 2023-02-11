@@ -23,6 +23,11 @@ export interface PlayerState {
   ext?: Record<string, unknown>;
 }
 
+export interface PlayListState {
+  list: string[];
+  cursor: number;
+}
+
 const checkPlaylist = (list: string[]) => {
   if (list.length === 0) {
     throw new Error('Playlist is empty');
@@ -46,8 +51,10 @@ const loadResources = (path: string) => {
 };
 
 const usePlayer = () => {
-  const [list, setList] = useState<string[]>([]);
-  const [cursor, setCursor] = useState<number>(0);
+  const [listState, setListState] = useState<PlayListState>({
+    list: [],
+    cursor: 0,
+  });
   const [state, setPlayerState] = useState<PlayerState>({
     status: PlayerStatus.Idle,
   });
@@ -80,7 +87,7 @@ const usePlayer = () => {
       controller.off('play', setToPlayingState);
       controller.off('end', stop);
     };
-  });
+  }, []);
 
   const play = async (path: string) => {
     const controller = audioControllerRef.current;
@@ -101,6 +108,17 @@ const usePlayer = () => {
     }
   };
 
+  useEffect(() => {
+    const { list, cursor } = listState;
+    if (list[cursor]) {
+      play(list[cursor]);
+    }
+  }, [listState]);
+
+  const playList = async (pathes: string[], index: number) => {
+    setListState({ list: pathes, cursor: index });
+  };
+
   const resume = () => {
     const controller = audioControllerRef.current;
     controller.resume();
@@ -114,11 +132,10 @@ const usePlayer = () => {
   };
 
   const adjust = (delta: -1 | 1) => {
+    const { list, cursor } = listState;
     checkPlaylist(list);
-    const nextCursor = cursor + delta + list.length;
-    const nextPath = list[nextCursor % list.length];
-    setCursor(nextCursor);
-    return play(nextPath);
+    const nextCursor = (cursor + delta + list.length) % list.length;
+    setListState((state) => ({ ...state, cursor: nextCursor }));
   };
 
   const next = () => adjust(1);
@@ -128,17 +145,19 @@ const usePlayer = () => {
   const getLyric = (currentTime: number) =>
     lyricHelperRef.current?.getLine(currentTime);
 
+  const getFullLyrics = () => lyricHelperRef.current?.getFullLyrics();
+
   return {
+    listState,
     state,
-    play,
     pause,
     stop,
     resume,
     next,
     prev,
     getLyric,
-    list,
-    setList,
+    getFullLyrics,
+    playList,
     ref: audioControllerRef,
   };
 };

@@ -23,4 +23,6 @@ export interface FileStats {
   isFile: boolean;
   isDirectory: boolean;
   parent: string;
+  collection?: string;
+  category?: string;
 }

@@ -11,7 +11,7 @@ import {
   RetweetOutlined,
   PauseOutlined,
 } from '@ant-design/icons';
-import { Button, Slider, Popover } from 'antd';
+import { Button, Slider } from 'antd';
 import { PlayerState } from '@/models/audio-player';
 import { INITIAL_VOLUME } from '@/services/AudioController';
 import path from 'path-browserify';
@@ -36,12 +36,12 @@ const calcRotateDeg = (displayData: PlayerDisplayData) =>
   ~~((displayData.currentTime / displayData.duration) * 360 * 6);
 
 export const FloatAudioPlayer = () => {
-  const { list, state, pause, prev, next, resume, stop, ref, getLyric } =
+  const { listState, state, pause, prev, next, resume, stop, ref, getLyric } =
     useModel('audio-player');
   const [displayData, setDisplayData] = useState<PlayerDisplayData>({
     currentTime: 0,
     duration: 1,
-    volume: INITIAL_VOLUME
+    volume: INITIAL_VOLUME,
   });
   const routeValue = useContext(RouteContext);
   const audioPlayerWidth = useMemo(
@@ -82,7 +82,7 @@ export const FloatAudioPlayer = () => {
           shape="circle"
           icon={<StepBackwardOutlined />}
           onClick={notifyError(prev)}
-          disabled={list.length === 0}
+          disabled={listState.list.length === 0}
         />
         {state.status === PlayerStatus.Playing ? (
           <Button
@@ -106,7 +106,7 @@ export const FloatAudioPlayer = () => {
           shape="circle"
           icon={<StepForwardOutlined />}
           onClick={notifyError(next)}
-          disabled={list.length === 0}
+          disabled={listState.list.length === 0}
         />
       </div>
       <div className={styles.audioOverview}>

@@ -22,6 +22,7 @@ export async function getFolder(
 export async function getCollection(
   params: {
     name: string;
+    category?: string;
   },
   options?: { [key: string]: any },
 ) {

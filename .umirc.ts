@@ -30,9 +30,9 @@ export default defineConfig({
       icon: 'StarOutlined',
     },
     {
-      name: 'Music',
-      path: '/music',
-      component: './Music',
+      name: 'Player',
+      path: '/player',
+      component: './Player',
       icon: 'PlayCircleOutlined',
     },
   ],
