@@ -6,7 +6,8 @@ type FileOverviewState =
   | (FileStats & {
       children?: FileStats[];
       path: string;
-      starId?: string;
+      starred?: boolean;
+      playlist?: string[];
     })
   | null;
 
@@ -17,10 +18,13 @@ const useOverview = () => {
   useEffect(() => {
     if (overview?.path) {
       queryMarkers({ path: overview?.path }).then((result) => {
-        const starId = result.data?.find(
+        const starred = result.data?.some(
           (marker: any) => marker.collection === 'star',
-        )?.id;
-        setOverview({ ...overview, starId });
+        );
+        const playlist = result.data
+          ?.filter((marker: any) => marker.collection === 'audio')
+          .map((marker: any) => marker.category);
+        setOverview({ ...overview, starred, playlist });
       });
     }
   }, [overview?.path, lastUpdate]);

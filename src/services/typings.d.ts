@@ -6,8 +6,15 @@ declare namespace API {
   interface Bookmark {
     path: string;
     type: 'file' | 'directory';
-    collection: 'star' | 'music' | 'video';
+    collection: 'star' | 'audio' | 'video';
     category: 'default' | string;
+  }
+
+  interface AudioMarks {
+    path: string;
+    type: 'file';
+    collection: 'audio';
+    categories: string[];
   }
 
   type BookmarkRecord = Bookmark & { id: string };
@@ -80,6 +87,12 @@ declare namespace API {
     data?: FileStats & {
       children: import('typings').FileStats[];
     };
+  }
+
+  interface Result_Categories {
+    success?: boolean;
+    errorMessage?: string;
+    data?: string[];
   }
 
   interface Result_FileInfo_ {

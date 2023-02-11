@@ -8,6 +8,8 @@ import {
   CloseOutlined,
   StarOutlined,
   StarFilled,
+  HeartOutlined,
+  HeartFilled,
 } from '@ant-design/icons';
 import { useModel, history } from '@umijs/max';
 import { humanizeSize } from '@/utils/format';
@@ -18,6 +20,7 @@ import path from 'path-browserify';
 import dayjs from 'dayjs';
 import styles from './index.less';
 import { PlayerStatus } from '@/models/audio-player';
+import { CreateTypes } from '@/models/inquiry';
 
 const p = path;
 
@@ -105,20 +108,20 @@ const FileDownloadButton = ({ path }: { path: string }) => {
 const FileStarButton = ({
   path,
   type,
-  starId,
+  starred,
 }: {
   path: string;
   type: 'file' | 'directory';
-  starId?: string;
+  starred?: boolean;
 }) => {
   const { refresh: refreshOverview } = useModel('overview');
   const { refresh: refreshGlobal } = useModel('global');
   const isInStarPage = () => history.location.pathname === '/star';
   const refresh = () => (isInStarPage() ? refreshGlobal() : refreshOverview());
-  return !!starId ? (
+  return !!starred ? (
     <Button
       type="text"
-      onClick={() => unstar(starId).then(refresh)}
+      onClick={() => unstar(path).then(refresh)}
       icon={<StarFilled />}
     />
   ) : (
@@ -126,6 +129,38 @@ const FileStarButton = ({
       type="text"
       onClick={() => star(path, type).then(refresh)}
       icon={<StarOutlined />}
+    />
+  );
+};
+
+const FileFavoriteButton = ({
+  path,
+  playlist,
+}: {
+  path: string;
+  playlist?: string[];
+}) => {
+  const { openInquiry } = useModel('inquiry');
+  const { refresh: refreshOverview } = useModel('overview');
+  const { refresh: refreshGlobal } = useModel('global');
+  const isInStarPage = () => history.location.pathname === '/music';
+  const refresh = () => (isInStarPage() ? refreshGlobal() : refreshOverview());
+  const selectedValues = playlist?.join('\n');
+  return !!playlist?.length ? (
+    <Button
+      type="text"
+      onClick={() =>
+        openInquiry(CreateTypes.Favorite, path, selectedValues).then(refresh)
+      }
+      icon={<HeartFilled />}
+    />
+  ) : (
+    <Button
+      type="text"
+      onClick={() =>
+        openInquiry(CreateTypes.Favorite, path, selectedValues).then(refresh)
+      }
+      icon={<HeartOutlined />}
     />
   );
 };
@@ -177,6 +212,9 @@ const FilePreviewButton = ({ path }: { path: string }) => {
 const FileOverview = ({ className }: { className: string }) => {
   const { overview } = useModel('overview');
   const { previewState } = useModel('preview');
+  const isAudio =
+    overview?.path &&
+    (lookup(p.basename(overview.path)) || 'text/plain').startsWith('audio/');
 
   return (
     overview && (
@@ -191,12 +229,19 @@ const FileOverview = ({ className }: { className: string }) => {
                 previewState?.isEditing && (
                   <FileSaveButton key="save" path={overview?.path} />
                 ),
+                !previewState?.isEditing && isAudio && (
+                  <FileFavoriteButton
+                    key="favorite"
+                    path={overview?.path}
+                    playlist={overview?.playlist}
+                  />
+                ),
                 !previewState?.isEditing && (
                   <FileStarButton
                     key="star"
                     type="file"
                     path={overview?.path}
-                    starId={overview?.starId}
+                    starred={overview?.starred}
                   />
                 ),
                 !previewState?.isEditing && (
@@ -211,7 +256,7 @@ const FileOverview = ({ className }: { className: string }) => {
                   key="star"
                   type="directory"
                   path={overview?.path}
-                  starId={overview?.starId}
+                  starred={overview?.starred}
                 />,
               ])
         }

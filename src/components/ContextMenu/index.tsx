@@ -1,4 +1,4 @@
-import { CreateTypes } from '@/models/creator';
+import { CreateTypes } from '@/models/inquiry';
 import { deletePath } from '@/services/FileController';
 import { useModel } from '@umijs/max';
 import { Button, Dropdown, Modal } from 'antd';
@@ -26,7 +26,7 @@ interface ContextMenuProps {
 
 const ContextMenu = ({ children, path, name, items }: ContextMenuProps) => {
   const { refresh, setLoading } = useModel('global');
-  const { openCreator } = useModel('creator');
+  const { openInquiry } = useModel('inquiry');
   const { copy, cut, exist, paste } = useModel('clipboard');
 
   const handleMenuItemClick = (
@@ -50,9 +50,9 @@ const ContextMenu = ({ children, path, name, items }: ContextMenuProps) => {
         okType: 'danger',
       });
     } else if (label === ContextMenuItems.NewFile) {
-      openCreator(CreateTypes.NewFile, path);
+      openInquiry(CreateTypes.NewFile, path).then(refresh);
     } else if (label === ContextMenuItems.NewFolder) {
-      openCreator(CreateTypes.NewFolder, path);
+      openInquiry(CreateTypes.NewFolder, path).then(refresh);
     } else if (label === ContextMenuItems.Paste) {
       if (name === null) {
         setLoading(true);
@@ -60,7 +60,7 @@ const ContextMenu = ({ children, path, name, items }: ContextMenuProps) => {
       }
     } else if (label === ContextMenuItems.Rename) {
       if (!!name) {
-        openCreator(CreateTypes.Rename, p.resolve(path, name));
+        openInquiry(CreateTypes.Rename, p.resolve(path, name)).then(refresh);
       }
     } else {
       console.error(`Unexpected action: ${label} target: ${name}`);

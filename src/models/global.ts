@@ -39,6 +39,7 @@ const useFileList = () => {
         }
       })
       .finally(() => {
+        // in case users navigate from star page
         if (history.location.pathname !== '/file') {
           history.push('/file');
         }
