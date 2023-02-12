@@ -1,4 +1,6 @@
 import { FloatAudioPlayer } from './components/AudioPlayer';
+import { CloudLogo } from './icons/cloud';
+import { blue } from '@ant-design/colors';
 
 export async function getInitialState(): Promise<{ name: string }> {
   return { name: 'default' };
@@ -7,7 +9,7 @@ export async function getInitialState(): Promise<{ name: string }> {
 export const layout = () => {
   return {
     layout: 'mix',
-    logo: 'https://img.alicdn.com/tfs/TB1YHEpwUT1gK0jSZFhXXaAtVXa-28-27.svg',
+    logo: <CloudLogo color={blue.primary as string} />,
     menu: {
       locale: false,
     },
